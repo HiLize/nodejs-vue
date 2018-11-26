@@ -1,0 +1,28 @@
+image: 172.16.9.100:5000/java_ci:latest
+
+stages:
+  - build
+build_dev:
+  stage: build
+  only:
+    - /^test_v.*$/
+  tags:
+    - docker_builder2
+  script:
+    - bash  ./docker.sh bp 172.16.9.100:5000 development
+build_test:
+  stage: build
+  only:
+    - /^prod_v.*$/
+  tags:
+    - docker_builder2
+  script:
+    - bash  ./docker.sh bp wecloud1:5000 production
+build_power:
+  stage: build
+  only:
+    - /^power_v.*$/
+  tags:
+    - docker_builder2
+  script:
+    - bash  ./docker.sh bp wectest1:5000 power

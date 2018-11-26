@@ -1,0 +1,12 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+
+.zeropadding{
+  padding: 0 !important;
+}
+
+.floatRight{
+  float: right;
+}

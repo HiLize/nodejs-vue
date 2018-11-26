@@ -1,0 +1,400 @@
+
+<link rel='stylesheet' href='stylesheets/style.css' />
+<link rel='stylesheet' href='stylesheets/bootstrap.css' />
+<link rel='stylesheet' href='stylesheets/dashboard.css' />
+<script type="text/javascript" src="javascripts/jquery.min.js"></script>
+<script type="text/javascript" src="javascripts/bootstrap.js"></script>
+<script src="javascripts/index.js"></script>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">营销系统</a>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active"><a href="#">字典维护</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+            <h2 class="sub-header">
+                <span>人员</span>
+                <div class="btn-group floatRight" role="group">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ryModal">新建</button>
+                </div>
+            </h2>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>工号</th>
+                        <th>姓名</th>
+                        <th>岗位</th>
+                        <th>所在地</th>
+                        <th>调用成本（人天）</th>
+                        <th>联系方式</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each userList}}
+                        <tr>
+                            <td>{{{addOne @index }}}</td>
+                            <td>{{employee_id}}</td>
+                            <td>{{name}}</td>
+                            <td>{{business}}</td>
+                            <td>{{address}}</td>
+                            <td>{{cost}}</td>
+                            <td>{{phone}}</td>
+                            <td>
+                                <button onclick="queryUserById('{{id}}');" type="button" class="btn btn-link zeropadding" data-toggle="modal" data-target="#ryModifyModal">编辑</button>
+                                <button onclick="setDelUserId('{{id}}');" type="button" class="btn btn-link zeropadding" data-toggle="modal" data-target="#ryDelModal">删除</button>
+                            </td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <!--创建人员-->
+            <div class="modal fade" id="ryModal" tabindex="-1" role="dialog" aria-labelledby="ryModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="ryModalLabel">新建人员</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="xjryForm" class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="inputGH" class="col-sm-2 control-label">工号</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputGH" name="employee_id">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputXM" class="col-sm-2 control-label">姓名</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputXM" name="name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputGW" class="col-sm-2 control-label">岗位</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputGW" name="business">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputSZD" class="col-sm-2 control-label">所在地</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputSZD" name="address">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputDYCB" class="col-sm-2 control-label">调用成本（人天）</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="inputDYCB" name="cost">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputLXFS" class="col-sm-2 control-label">联系方式</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputLXFS" name="phone">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" onclick="createUser();">提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--编辑人员-->
+            <div class="modal fade" id="ryModifyModal" tabindex="-1" role="dialog" aria-labelledby="ryModifyLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="ryModifyLabel">编辑人员</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="ryFormModify" class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="inputXM" class="col-sm-2 control-label">id</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" disabled="disabled" class="form-control" id="inputIDModify" name="id">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputXM" class="col-sm-2 control-label">工号</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputGHModify" name="employee_id">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputXM" class="col-sm-2 control-label">姓名</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputXMModify" name="name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputGW" class="col-sm-2 control-label">岗位</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputGWModify" name="business">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputSZD" class="col-sm-2 control-label">所在地</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputSZDModify" name="address">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputDYCB" class="col-sm-2 control-label">调用成本（人天）</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" class="form-control" id="inputDYCBModify" name="cost">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputLXFS" class="col-sm-2 control-label">联系方式</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputLXFSModify" name="phone">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" onclick="updateUser();">提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--删除-->
+            <div class="modal fade" id="ryDelModal" tabindex="-1" role="dialog" aria-labelledby="ryDelModalLabel">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="ryDelModalLabel">删除</h4>
+                        </div>
+                        <div class="modal-body row">
+                            <div style="margin: 10px;" class="row">
+                                <button type="button" class="btn btn-default col-xs-5 col-md-5 col-sm-5" data-dismiss="modal">关闭</button>
+                                <div class="col-xs-2 col-md-2 col-sm-2"></div>
+                                <button type="button" class="btn btn-danger col-xs-5 col-md-5 col-sm-5" onclick="deleteUserById()">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <h2 class="sub-header">
+                <span>调用类型（位置）</span>
+                <div class="btn-group floatRight" role="group">
+                    <button onclick="setDicType('cost_location');" data-toggle="modal" data-target="#dicModal" type="button" class="btn btn-primary">新建</button>
+                </div>
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>名称</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each costLocations}}
+                        <tr>
+                            <td>{{{addOne @index }}}</td>
+                            <td>{{name}}</td>
+                            <td>
+                                <button onclick="queryDicById('{{id}}');" type="button" class="btn btn-link zeropadding" data-toggle="modal" data-target="#dicModalModify">编辑</button>
+                                <button onclick="setDelDicId('{{id}}');" type="button" class="btn btn-link zeropadding" data-toggle="modal" data-target="#dicDelModal">删除</button>
+                            </td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <!--新建字典-->
+            <div class="modal fade" id="dicModal" tabindex="-1" role="dialog" aria-labelledby="dicModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="dicModalLabel">新建</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="dicForm" class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="inputDicName" class="col-sm-2 control-label">名称</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputDicName" name="name">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" onclick="createDic();">提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--编辑字典-->
+            <div class="modal fade" id="dicModalModify" tabindex="-1" role="dialog" aria-labelledby="dicModifyLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="dicModifyLabel">编辑</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="dicFormModify" class="form-horizontal">
+                                <div class="form-group">
+                                    <label for="inputXM" class="col-sm-2 control-label">id</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" disabled="disabled" class="form-control" id="inputDicIDModify" name="name">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputDicNameModify" class="col-sm-2 control-label">名称</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="inputDicNameModify" name="name">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary" onclick="updateDic();">提交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--删除-->
+            <div class="modal fade" id="dicDelModal" tabindex="-1" role="dialog" aria-labelledby="dicDelModalLabel">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="dicDelModalLabel">删除</h4>
+                        </div>
+                        <div class="modal-body row">
+                            <div style="margin: 10px;" class="row">
+                                <button type="button" class="btn btn-default col-xs-5 col-md-5 col-sm-5" data-dismiss="modal">关闭</button>
+                                <div class="col-xs-2 col-md-2 col-sm-2"></div>
+                                <button type="button" class="btn btn-danger col-xs-5 col-md-5 col-sm-5" onclick="deleteDicById()">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <h2 class="sub-header">
+                <span>调用类型（事项）</span>
+                <div class="btn-group floatRight" role="group">
+                    <button onclick="setDicType('cost_type');" data-toggle="modal" data-target="#dicModal" type="button" class="btn btn-primary">新建</button>
+                </div>
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>名称</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each costTypes}}
+                        <tr>
+                            <td>{{{addOne @index }}}</td>
+                            <td>{{name}}</td>
+                            <td>
+                                <button onclick="queryDicById('{{id}}');" type="button" class="btn btn-link zeropadding" data-toggle="modal" data-target="#dicModalModify">编辑</button>
+                                <button onclick="setDelDicId('{{id}}');" type="button" class="btn btn-link zeropadding" data-toggle="modal" data-target="#dicDelModal">删除</button>
+                            </td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="sub-header">
+                <span>涉及产品</span>
+                <div class="btn-group floatRight" role="group">
+                    <button onclick="setDicType('refer_product');" data-toggle="modal" data-target="#dicModal" type="button" class="btn btn-primary">新建</button>
+                </div>
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>名称</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each referProducts}}
+                        <tr>
+                            <td>{{{addOne @index }}}</td>
+                            <td>{{name}}</td>
+                            <td>
+                                <button onclick="queryDicById('{{id}}');" type="button" class="btn btn-link zeropadding" data-toggle="modal" data-target="#dicModalModify">编辑</button>
+                                <button onclick="setDelDicId('{{id}}');" type="button" class="btn btn-link zeropadding" data-toggle="modal" data-target="#dicDelModal">删除</button>
+                            </td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <h2 class="sub-header">调用状态</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>名称</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each costStates}}
+                        <tr>
+                            <td>{{{addOne @index }}}</td>
+                            <td>{{name}}</td>
+                            <td>
+                                <button onclick="queryDicById('{{id}}');" type="button" class="btn btn-link zeropadding" data-toggle="modal" data-target="#dicModalModify">编辑</button>
+                            </td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
